@@ -6,6 +6,7 @@ import createGhostPost from './createGhostPost'
 import { createNewsID, findNewsID } from '../services'
 import cron from 'node-cron'
 import { config } from '../config/config'
+import countWords from './countWords'
 
 // const period = 7
 const NYTIMES_API_KEY = config.nytimes_api_key
@@ -63,8 +64,13 @@ async function fetchNews(url: string): Promise<void> {
                 )
 
                 if (generatedNewsArticle) {
-                    const title = generatedNewsArticle.title
                     const content = generatedNewsArticle.content
+                    // If there is not enough content, avoid posting the article
+                    if (countWords(content) < 100) {
+                        console.log('Post skipped due to less content')
+                        continue
+                    }
+                    const title = generatedNewsArticle.title
                     const tag = article?.section
                     createGhostPost(title, content, tag)
                 }
@@ -85,7 +91,7 @@ function fetchSectionsNews(section: string): void {
 }
 
 // Schedule the task to run every day at a specific time (adjust the cron expression as needed)
-cron.schedule('0 */4 * * *', () => {
+cron.schedule('0 */1 * * *', () => {
     console.log('Fetching news for today...')
     generateNews()
 })

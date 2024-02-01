@@ -1,6 +1,7 @@
 export const config = {
     node_env: process.env.NODE_ENV || 'development',
     mongodb_uri: process.env.MONGO_URL || 'mongodb://localhost/',
+    mongodb_collection: process.env.MONGO_DB_COLLECTION || '',
     cohere_api_key: process.env.COHERE_API_KEY || '',
     cohere_api_prompt: process.env.COHERE_API_PROMPT || '',
     gpt_model: process.env.GPT_MODEL || '',
