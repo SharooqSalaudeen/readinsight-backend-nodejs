@@ -9,7 +9,7 @@ async function NewsArticleGenerator(articles: string) {
     const completion = await cohere.generate({
         model: 'command',
         prompt: `${config.cohere_api_prompt}${articles}`,
-        maxTokens: 4096,
+        maxTokens: 4095,
         temperature: 0.9,
         k: 0,
         stopSequences: [],

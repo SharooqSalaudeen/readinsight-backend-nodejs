@@ -7,6 +7,7 @@ import { config } from '../config/config'
 // const
 // const ArticlesCount = 3
 const ArticlesCount = 1
+const wordCount = 3000
 
 const NEWSAPI_KEY = config.newsapi_key
 const NEWSAPI_BASE_URL = config.newsapi_base_url
@@ -66,6 +67,23 @@ function cleanUpContent(content: string): string {
     return cleanedContent || ''
 }
 
+function truncateString(inputString: string, limit: number) {
+    // Split the input string into an array of words
+    const words = inputString.split(' ')
+
+    // Check if the number of words is greater than the limit
+    if (words.length > limit) {
+        // If yes, slice the array up to the specified limit
+        const truncatedWords = words.slice(0, limit)
+
+        // Join the truncated array back into a string and append '...' to indicate truncation
+        return truncatedWords.join(' ') + '...'
+    } else {
+        // If the number of words is within the limit, return the original string
+        return inputString
+    }
+}
+
 async function fetchArticleContent(query: string): Promise<ArticleContent[]> {
     const today = new Date()
     const pastDate = new Date(today)
@@ -98,9 +116,14 @@ async function fetchArticleContent(query: string): Promise<ArticleContent[]> {
                         article?.textContent || ''
                     )
 
+                    const truncatedContent = truncateString(
+                        cleanedContent,
+                        wordCount
+                    )
+
                     return {
                         // title: result.title,
-                        content: cleanedContent || '',
+                        content: truncatedContent || '',
                     }
                 } catch (error) {
                     console.error(
