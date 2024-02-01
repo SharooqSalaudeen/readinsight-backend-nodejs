@@ -7,7 +7,7 @@ import { config } from '../config/config'
 // const
 // const ArticlesCount = 3
 const ArticlesCount = 1
-const wordCount = 3000
+const wordCount = 2000
 
 const NEWSAPI_KEY = config.newsapi_key
 const NEWSAPI_BASE_URL = config.newsapi_base_url
