@@ -1,13 +1,20 @@
-// The response text
-const response: string =
-    "Biden Administration Faces Challenges in Re-election Bid Amid Arab and Muslim Voter Discontent\n\nAs President Joe Biden prepares for his re-election bid in 2024, he is facing significant challenges in garnering support from Arab Americans and Muslim voters. Many of these voters are expressing dissatisfaction with his unwavering support for Israel and his failure to call for a permanent ceasefire in Gaza. Democratic strategists warn that the president may struggle to find surrogates willing to speak to these voter groups, further complicating his campaign efforts.\n\nMichigan Democratic Rep. Rashida Tlaib, the first Palestinian American woman to serve in Congress, accused President Biden of supporting a Palestinian 'genocide' in November, straining her relationship with the president. Tlaib's silence on Biden's re-election bid speaks volumes, as she had previously expressed strong support for him during the 2020 election campaign.\n\nArab Americans and Muslim voters have voiced their dissatisfaction with Biden's stance on the Israel-Hamas conflict, and some have stated that they will not support his re-election efforts. The lack of support from these communities poses a challenge for Biden, particularly in states with significant Muslim American populations such as Michigan, where more than 200,000 Muslim American voters reside.\n\nDemocratic strategists warn that Biden may struggle to find surrogates who are willing to engage with Arab American and Muslim voter groups. The administration is reportedly having difficulty finding leaders from these communities who are willing to meet with White House officials. No Muslim or Arab American groups have endorsed Biden's re-election bid so far.\n\nMoreover, the administration's efforts to engage with these communities have fallen short of expectations. Arab American and Muslim leaders have declined invitations to meet with campaign officials, citing the administration's failure to address their concerns effectively.\n\nThe discontent among Arab Americans and Muslim voters goes beyond the Israel-Hamas conflict. Progressive groups, including those representing Jewish voters, voters of color, and young people, are calling for a permanent ceasefire and are disappointed by Biden's response. These groups make up a significant part of Biden's winning coalition in the 2020 election and could significantly impact his re-election prospects if their concerns are not addressed.\n\nThe lack of support from Arab Americans, Muslim voters, and progressive groups highlights the challenges Biden faces in his re-election bid. It remains to be seen whether the administration can effectively address these concerns and regain the support of these key voter groups."
+function extractTitleAndContent(apiResponse: string) {
+    const titleStartIndex = apiResponse.indexOf('Title:') + 'Title:'.length
+    const contentStartIndex =
+        apiResponse.indexOf('Content:') + 'Content:'.length
 
-// Using regex to split the text into title and content based on the first line
-const [title, ...contentLines] = response.split(/\n/)
+    const title = apiResponse
+        .slice(titleStartIndex, apiResponse.indexOf('Content:'))
+        .trim()
+    const content = apiResponse.slice(contentStartIndex).trim()
 
-// The content is the rest of the lines
-const content: string = contentLines.join('\n')
+    return { title, content }
+}
 
-// Output the title and content
-console.log('Title:', title)
-console.log('\nContent:', content)
+// Example usage:
+const apiResponse =
+    "Title: US temporarily pauses 'additional' funding for key UN agency in Gaza Strip over allegations of Hamas links\n\nContent: The United States has temporarily paused additional funding for the United Nations Relief and Works Agency (UNRWA) in the Gaza Strip over allegations that some of its employees were involved in the Oct. 7 Hamas terrorist attack in Israel. The United States has alleged that twelve UNRWA employees were involved in the"
+
+const { title, content } = extractTitleAndContent(apiResponse)
+console.log(title)
+console.log(content)

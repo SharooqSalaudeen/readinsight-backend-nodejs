@@ -1,6 +1,19 @@
 import { CohereClient } from 'cohere-ai'
 import { config } from '../../config/config'
 
+function extractTitleAndContent(apiResponse: string) {
+    const titleStartIndex = apiResponse.indexOf('Title:') + 'Title:'.length
+    const contentStartIndex =
+        apiResponse.indexOf('Content:') + 'Content:'.length
+
+    const title = apiResponse
+        .slice(titleStartIndex, apiResponse.indexOf('Content:'))
+        .trim()
+    const content = apiResponse.slice(contentStartIndex).trim()
+
+    return { title, content }
+}
+
 async function NewsArticleGenerator(articles: string) {
     const cohere = new CohereClient({
         token: config.cohere_api_key, // This is your trial API key
@@ -17,20 +30,15 @@ async function NewsArticleGenerator(articles: string) {
         truncate: 'END',
     })
     const response = completion.generations[0].text
-    console.log(response)
+    // console.log(response)
 
     if (response) {
-        // Using regex to split the text into title and content based on the first line
-        const [title, ...contentLines] = response.split(/\n/)
-
-        // The content is the rest of the lines
-        const content: string = contentLines.join('\n')
-
-        // Remove hashtags
-        const cleanedTitle = title.replace(/#/g, '')
+        const { title, content } = extractTitleAndContent(response)
+        console.log(title)
+        console.log(content)
 
         return {
-            title: cleanedTitle,
+            title,
             content,
         }
     }
