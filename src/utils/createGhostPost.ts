@@ -5,6 +5,7 @@ import { marked } from 'marked'
 import { config } from '../config/config'
 
 // Admin API key goes here
+const ghostUrl = config.ghost_url
 const key = config.ghost_key
 const port = config.ghost_port
 
@@ -28,7 +29,7 @@ const createGhostPost = async (
     console.log('html content', htmlContent)
 
     // Make an authenticated request to create a post
-    const url = `http://localhost:${port}/ghost/api/admin/posts/?source=html`
+    const url = `${ghostUrl}:${port}/ghost/api/admin/posts/?source=html`
     const headers = { Authorization: `Ghost ${token}` }
     const payload = {
         posts: [

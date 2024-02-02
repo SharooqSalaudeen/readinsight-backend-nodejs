@@ -10,5 +10,6 @@ export const config = {
     newsapi_base_url: process.env.NEWSAPI_BASE_URL || '',
     newsapi_key: process.env.NEWSAPI_KEY || '',
     ghost_key: process.env.GHOST_KEY || '',
+    ghost_url: process.env.GHOST_URL || 'http://localhost',
     ghost_port: process.env.GHOST_PORT || '',
 }
