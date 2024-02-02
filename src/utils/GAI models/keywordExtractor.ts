@@ -24,7 +24,7 @@ async function keywordExtractor(newsData: string) {
         messages: [
             {
                 role: 'system',
-                content: `Pick top ${keywordCount} single worded keywords from the following news data that captures the story.`,
+                content: `Pick top ${keywordCount} single worded keywords from the following news data that captures the story. Focus mainly on nouns like names.`,
             },
             {
                 role: 'user',
