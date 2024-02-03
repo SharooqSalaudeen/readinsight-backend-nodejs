@@ -71,7 +71,7 @@ async function fetchNews(url: string): Promise<void> {
                         continue
                     }
                     const title = generatedNewsArticle.title
-                    const tag = article?.section
+                    const tag = sections[currentSection]
                     createGhostPost(title, content, tag)
                 }
 
