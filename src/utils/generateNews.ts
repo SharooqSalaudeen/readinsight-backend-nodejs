@@ -14,7 +14,6 @@ const NYTIMES_API_KEY = config.nytimes_api_key
 const NYTIMES_BASE_URL = config.nytimes_base_url
 
 // List of sections you want to fetch news for
-let currentSection = 0
 const sections: string[] = [
     'politics',
     'business',
@@ -46,7 +45,13 @@ function extractLastPart(string: string) {
 }
 
 // Function to fetch news for a specific section
-async function fetchNews(url: string): Promise<void> {
+async function fetchNews({
+    url,
+    section,
+}: {
+    url: string
+    section: string
+}): Promise<void> {
     try {
         const response = await axios.get(`${url}`)
         // const articles = response.data.results
@@ -87,11 +92,11 @@ async function fetchNews(url: string): Promise<void> {
                         continue
                     }
                     const title = generatedNewsArticle.title
-                    const tag = sections[currentSection]
+                    const tag = section
                     const postURL = createGhostPost(title, content, tag)
                     await createNewsID({
                         newsId: nYTimesArticleID,
-                        category: sections[currentSection],
+                        category: section,
                         originalNewsURL: similarArticles[0].url,
                         createdNewsURL: (await postURL) ?? '',
                     })
@@ -108,7 +113,7 @@ async function fetchNews(url: string): Promise<void> {
 // Function to fetch news for all sections
 function fetchSectionsNews(section: string): void {
     const url = `${NYTIMES_BASE_URL}${section}.json?api-key=${NYTIMES_API_KEY}`
-    fetchNews(url)
+    fetchNews({ url, section })
 }
 
 // Schedule the task to run every day at a specific time (adjust the cron expression as needed)
@@ -122,7 +127,6 @@ console.log('Fetching initial news...')
 function generateNews() {
     fetchSectionsNews(sections[incrementSectionCounter()])
     // Increment the variable and loop it from 0 to 6
-    currentSection = (currentSection = 0 + 1) % 8
 }
 
 export default generateNews
