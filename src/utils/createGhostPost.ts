@@ -12,7 +12,7 @@ const createGhostPost = async (
     title: string,
     content: string,
     tag: string = ''
-): Promise<void> => {
+): Promise<string | undefined> => {
     // Split the key into ID and SECRET
     const [id, secret] = key.split(':')
 
@@ -43,7 +43,8 @@ const createGhostPost = async (
 
     try {
         const response = await axios.post(url, payload, { headers })
-        console.log('ghost post status:', response.statusText)
+        console.log('ghost post status:', response?.statusText)
+        return response?.data?.posts[0]?.url
     } catch (error) {
         console.error('ghost post error:', error)
     }

@@ -14,6 +14,7 @@ const NEWSAPI_BASE_URL = config.newsapi_base_url
 const options = `sortBy=publishedAt&language=en&pageSize=${ArticlesCount}&excludeDomains=nytimes.com`
 
 interface ArticleContent {
+    url: string
     title: string
     content: string
 }
@@ -122,6 +123,7 @@ async function fetchArticleContent(query: string): Promise<ArticleContent[]> {
                     )
 
                     return {
+                        url: result.url,
                         // title: result.title,
                         content: truncatedContent || '',
                     }
@@ -129,7 +131,10 @@ async function fetchArticleContent(query: string): Promise<ArticleContent[]> {
                     console.error(
                         `Error fetching or parsing content for ${result.title}: ${error}`
                     )
-                    return { title: result.title, content: '' } // Return an empty string for failed articles
+                    return {
+                        // title: result.title,
+                        content: '',
+                    } // Return an empty string for failed articles
                 }
             })
         )

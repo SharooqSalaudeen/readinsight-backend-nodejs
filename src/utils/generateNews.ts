@@ -1,3 +1,4 @@
+import fs from 'fs'
 import axios from 'axios'
 import keywordExtractor from './GAI models/keywordExtractor'
 import fetchArticleContent from './newsScrapper'
@@ -24,6 +25,19 @@ const sections: string[] = [
     'movies',
     'automobiles',
 ]
+
+if (!fs.existsSync('sectionCounter.txt')) {
+    fs.writeFileSync('sectionCounter.txt', '0')
+}
+function incrementSectionCounter() {
+    // Read current counter value from file
+    const currentValue = parseInt(fs.readFileSync('sectionCounter.txt', 'utf8'))
+    // Increment the counter (looping from 0 to 7)
+    const newValue = (currentValue + 1) % 8
+    // Write the new counter value back to file
+    fs.writeFileSync('sectionCounter.txt', newValue.toString())
+    return newValue
+}
 
 function extractLastPart(string: string) {
     const parts = string.split('/')
@@ -58,7 +72,9 @@ async function fetchNews(url: string): Promise<void> {
 
                 if (similarArticles.length === 0) continue
 
-                const articlesJsonString = JSON.stringify(similarArticles)
+                const articlesJsonString = JSON.stringify(
+                    similarArticles[0].content
+                )
                 const generatedNewsArticle = await NewsArticleGenerator(
                     articlesJsonString
                 )
@@ -72,10 +88,15 @@ async function fetchNews(url: string): Promise<void> {
                     }
                     const title = generatedNewsArticle.title
                     const tag = sections[currentSection]
-                    createGhostPost(title, content, tag)
+                    const postURL = createGhostPost(title, content, tag)
+                    await createNewsID({
+                        newsId: nYTimesArticleID,
+                        category: sections[currentSection],
+                        originalNewsURL: similarArticles[0].url,
+                        createdNewsURL: (await postURL) ?? '',
+                    })
                 }
 
-                await createNewsID(nYTimesArticleID)
                 break
             }
         }
@@ -99,7 +120,7 @@ cron.schedule('0 */1 * * *', () => {
 // Initial fetch when the application starts
 console.log('Fetching initial news...')
 function generateNews() {
-    fetchSectionsNews(sections[currentSection])
+    fetchSectionsNews(sections[incrementSectionCounter()])
     // Increment the variable and loop it from 0 to 6
     currentSection = (currentSection = 0 + 1) % 8
 }

@@ -1,8 +1,18 @@
 import { NYTimesNews } from '../models'
 import { INYTimesNews } from '@/types'
 
-export const createNewsID = async (id: string): Promise<INYTimesNews> => {
-    const nYTimesNews = new NYTimesNews({ newsId: id })
+export const createNewsID = async ({
+    newsId,
+    category,
+    originalNewsURL,
+    createdNewsURL,
+}: INYTimesNews): Promise<INYTimesNews> => {
+    const nYTimesNews = new NYTimesNews({
+        newsId,
+        category,
+        originalNewsURL,
+        createdNewsURL,
+    })
     return nYTimesNews.save()
 }
 
