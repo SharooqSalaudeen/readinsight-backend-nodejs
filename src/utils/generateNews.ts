@@ -1,13 +1,15 @@
 import fs from 'fs'
 import axios from 'axios'
-import keywordExtractor from './GAImodels/keywordExtractor'
 import fetchArticleContent from './newsScrapper'
-import NewsArticleGenerator from './GAImodels/newsArticleGenerator'
 import createGhostPost from './createGhostPost'
 import { createNewsID, findNewsID } from '../services'
 import cron from 'node-cron'
 import { config } from '../config/config'
 import countWords from './countWords'
+
+// Readinsight llm models
+import keywordExtractor from '../readinsight-llm-models-nodejs/keywordExtractor'
+import NewsArticleGenerator from '../readinsight-llm-models-nodejs/newsArticleGenerator'
 
 // const period = 7
 const NYTIMES_API_KEY = config.nytimes_api_key

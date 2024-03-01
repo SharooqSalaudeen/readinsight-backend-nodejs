@@ -39,6 +39,4 @@ dist-ssr
 # Ghost
 ghost
 
-# GAI models
-src/utils/GAImodels
 
